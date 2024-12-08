@@ -35,3 +35,4 @@ const TicketCard = ({ ticket, deleteTicket }: TicketCardProps) => {
 };
 
 export default TicketCard;
+

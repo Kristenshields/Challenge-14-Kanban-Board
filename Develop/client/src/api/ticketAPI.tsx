@@ -128,3 +128,4 @@ const deleteTicket = async (ticketId: number): Promise<ApiMessage> => {
 
 
 export { createTicket, deleteTicket, retrieveTickets, retrieveTicket, updateTicket};
+

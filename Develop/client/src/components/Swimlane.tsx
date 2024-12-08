@@ -37,3 +37,4 @@ const Swimlane = ({ title, tickets, deleteTicket }: SwimlaneProps) => {
 };
 
 export default Swimlane;
+
