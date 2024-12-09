@@ -6,25 +6,24 @@ interface JwtPayload {
 }
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-  // TODONE: verify the token exists and add the user data to the request object
-  const authHeader = req.headers.authorization;
+  // TODO: verify the token exists and add the user data to the request object
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
-  if (!authHeader) {
-    return res.status(401).json({ message: 'Unauthorized' });
+  if (!token) {
+    return res.status(401).json({ message: 'Access token is missing or invalid' });
   }
 
-  const token = authHeader.split(' ')[1];
-  const secretKey = process.env.JWT_SECRET;
+  jwt.verify(token, process.env.JWT_SECRET_KEY as string, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: 'Token is invalid or expired'});
+    }
 
-  if (!secretKey) {
-    return res.status(500).json({ message: 'Internal Server Error' });
-  }
+    const payload = decoded as JwtPayload;
+    req.user = { username: payload.username };
 
-  try {
-    const user = jwt.verify(token, secretKey) as JwtPayload;
-    req.user = user;
     next();
-  } catch (err) {
-    return res.status(403).json({ message: 'Forbidden' });
-  }
+  });
 };
+  
+
